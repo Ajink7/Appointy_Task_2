@@ -18,19 +18,23 @@ type Article struct {
 
 var Articles []Article
 
-//handlers
 
+//Home page which says hello
 func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to the HomePage!")
-	fmt.Println("Endpoint Hit: homePage")
+
 }
 
+
+//Return All Articles in json format
 func return_all_articles(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("Endpoint Hit: returnAllArticles")
+	
 	json.NewEncoder(w).Encode(Articles)
 }
 
+
+//Returns 1 single Article for the provided ID
 func return_one_article(w http.ResponseWriter, r *http.Request) {
 
   var Urls =  strings.Split(r.URL.Path, "/")
@@ -57,6 +61,8 @@ func return_one_article(w http.ResponseWriter, r *http.Request) {
 
 }
 
+//Creates Article Through json provided in POST request
+
 func create(w http.ResponseWriter, r *http.Request) {
   var temp_article Article
 
@@ -73,7 +79,7 @@ func create(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(temp_article)
 }
 
-
+//Searches for articles with keywords provided
 func search(w http.ResponseWriter, r *http.Request) {
 
     var Found_Articles  []Article
@@ -92,7 +98,7 @@ func search(w http.ResponseWriter, r *http.Request) {
   json.NewEncoder(w).Encode(Found_Articles)
 }
 
-
+//decides whether to create an article or return all articles based on request type
 func create_or_return(w http.ResponseWriter, r *http.Request) {
   if r.Method == "POST" {
     create(w,r)
@@ -107,7 +113,7 @@ func create_or_return(w http.ResponseWriter, r *http.Request) {
 
 }
 
-
+//handles all requests
 func handleRequests() {
     http.HandleFunc("/", homePage)
     http.HandleFunc("/articles",create_or_return)
